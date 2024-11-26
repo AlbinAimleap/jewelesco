@@ -6,6 +6,16 @@ class BuyGetDiscountProcessor(PromoProcessor):
         r"Buy\s+(?P<quantity>\d+)\s+get\s+(?P<discount>\d+)%\s+off\b" 
     ]
     
+    """
+    sale_price : 10 * 2 = 20/2 = 10
+    regular_price : 20
+    volume_deals_description: Buy 2 get 50% off
+    digital_coupon_price: Buy 2 get 50% off
+    volume_deals_price : 10
+    unit_price: volume_deals_price / quantity = 10/2 = 5
+    digital_coupon_price
+    """
+    
     #"Buy 2 get 50% off"
     
     def calculate_deal(self, item, match):

@@ -57,7 +57,7 @@ class PromoProcessor(ABC):
         pass
 
     @classmethod
-    def process_item(cls, item_data: Dict[str, Any]) -> T:
+    def process_item(cls, item_data: Union[Dict[str, Any], List[Dict[str, Any]]]) -> T:
         """Process a list of items or a single item."""
         if isinstance(item_data, list):
             cls.results.extend([cls.apply_store_brands(cls.process_single_item(item)) for item in item_data])

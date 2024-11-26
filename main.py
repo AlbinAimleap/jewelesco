@@ -6,17 +6,18 @@ from typing import Dict, Any
 import json
 from utils import reformat_data
 from datetime import datetime
-
-
+from get_coupons import map_coupen
 
 async def main():
-    csv_file = await get_products(process=True)
+    csv_file = await get_products(process=False)
     
-    data = pd.read_csv(csv_file).to_dict(orient='records')
+    df = pd.read_csv(csv_file)
+    dfcoupens = map_coupen(df,'81','60031')
 
-    data = pd.DataFrame(data)
+    data = pd.DataFrame(dfcoupens)
     data.fillna('', inplace=True)
     data = data.to_dict(orient='records')
+    
     processed_data = PromoProcessor.process_item(reformat_data(data))
     
     
@@ -27,17 +28,15 @@ async def main():
         data = processed_data.results
         
         for item in data:
-            item["digital_coupon_description"] = item["digital_coupon_short_description"]
             if not item["weight"] or item["weight"] == 0.0:
                 item["weight"] = ""
-            del item["digital_coupon_short_description"]
-        data = [i for i in data if i.get("volume_deals_description") or i.get("digital_coupon_description")]
+        # data = [i for i in data if i.get("volume_deals_description") or i.get("digital_coupon_description")]
         json.dump(data, f, indent=4)
     
     # promo_processor.to_json(new_file_json)
     # promo_processor.to_csv(new_file_csv)
     
-    
+
 
  
 if __name__ == "__main__":
